@@ -326,7 +326,7 @@ export default function CoursesPage() {
                 {/* Top Corner Details */}
                 <div className="flex justify-between items-start">
                   <div className="flex items-center gap-2">
-                    <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">N</div>
+                    <div className="w-10 h-10 bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 rounded-lg flex items-center justify-center text-white font-extrabold text-xl shadow-sm shadow-indigo-500/10">N</div>
                     <div>
                       <span className="brand-flashy text-base font-extrabold tracking-tight">Nexus SEOS</span>
                       <div className="text-[10px] text-slate-400 font-semibold leading-none">Software Engineering OS</div>

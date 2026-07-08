@@ -13,7 +13,7 @@ export default function AppShell() {
   const { user, logout } = useAuth();
 
   return (
-    <div className="flex h-screen overflow-hidden bg-nexus-bg">
+    <div className="flex h-screen overflow-hidden bg-slate-100">
       {/* Sidebar */}
       <motion.aside
         initial={{ x: -12, opacity: 0 }}
@@ -23,10 +23,10 @@ export default function AppShell() {
         {/* Logo */}
         <div className="px-4 py-5 border-b border-slate-200">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-base shrink-0">N</div>
+            <div className="w-8 h-8 bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 rounded-lg flex items-center justify-center text-white font-extrabold text-base shrink-0 shadow-sm shadow-indigo-500/10">N</div>
             <div>
-              <div className="text-slate-900 font-bold text-sm leading-none">Nexus SEOS</div>
-              <div className="text-slate-400 text-xs mt-0.5 font-medium">v1.0</div>
+              <div className="brand-flashy font-extrabold text-sm leading-none">Nexus SEOS</div>
+              <div className="text-slate-400 text-xs mt-0.5 font-semibold">v1.0</div>
             </div>
           </div>
         </div>

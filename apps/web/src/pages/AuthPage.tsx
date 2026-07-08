@@ -40,7 +40,7 @@ export default function AuthPage() {
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 mb-3">
-            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">N</div>
+            <div className="w-8 h-8 bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 rounded-lg flex items-center justify-center text-white font-extrabold text-lg shadow-sm shadow-indigo-500/10">N</div>
             <span className="brand-flashy text-2xl font-extrabold">Nexus SEOS</span>
           </div>
           <p className="text-slate-500 text-sm font-medium">Software Engineering Operating System</p>

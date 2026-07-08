@@ -10,7 +10,7 @@ export default function LandingPage() {
       {/* Navbar */}
       <header className="px-6 py-4 bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">N</div>
+          <div className="w-8 h-8 bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 rounded-lg flex items-center justify-center text-white font-extrabold text-lg shadow-sm shadow-indigo-500/10">N</div>
           <span className="brand-flashy text-xl font-extrabold tracking-tight">Nexus SEOS</span>
         </div>
         <div className="flex items-center gap-4">
