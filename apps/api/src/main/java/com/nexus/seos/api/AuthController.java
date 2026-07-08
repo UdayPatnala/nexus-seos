@@ -34,8 +34,15 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Map<String, String> request) {
         String email = request.get("email");
+        if (email != null) {
+            email = email.toLowerCase().trim();
+        }
         String password = request.get("password");
         String fullName = request.get("fullName");
+
+        if (email == null || email.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Email is required."));
+        }
 
         if (userRepository.findByEmail(email).isPresent()) {
             return ResponseEntity.badRequest().body(Map.of("error", "Email is already taken."));
@@ -58,7 +65,14 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> request) {
         String email = request.get("email");
+        if (email != null) {
+            email = email.toLowerCase().trim();
+        }
         String password = request.get("password");
+
+        if (email == null || email.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Email is required."));
+        }
 
         Optional<User> userOpt = userRepository.findByEmail(email);
         if (userOpt.isEmpty() || !passwordEncoder.matches(password, userOpt.get().getPasswordHash())) {
