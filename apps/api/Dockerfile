@@ -9,6 +9,8 @@ RUN mvn clean package -DskipTests -B
 # Run stage
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
+# Ensure /data directory exists with write permissions for SQLite database storage
+RUN mkdir -p /data && chmod 777 /data
 COPY --from=builder /build/target/nexus-seos-api-1.0.0.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
