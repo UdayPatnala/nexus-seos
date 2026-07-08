@@ -23,19 +23,19 @@ export default function Dashboard() {
 
   const masteryColor = (score: number) => {
     if (score >= 80) return 'bg-emerald-500';
-    if (score >= 50) return 'bg-indigo-500';
+    if (score >= 50) return 'bg-indigo-600';
     if (score >= 25) return 'bg-amber-500';
-    return 'bg-gray-600';
+    return 'bg-slate-400';
   };
 
   return (
     <div className="p-6 space-y-6 overflow-y-auto h-full">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-white">
+        <h1 className="text-2xl font-bold text-slate-900">
           Welcome back, {user?.fullName?.split(' ')[0] ?? 'Engineer'} 👋
         </h1>
-        <p className="text-gray-400 text-sm mt-1">Your learning operating system is ready.</p>
+        <p className="text-slate-500 text-sm mt-1">Your engineering learning operating system is active.</p>
       </div>
 
       {/* KPI Cards */}
@@ -53,8 +53,8 @@ export default function Dashboard() {
           >
             <div className="text-3xl">{kpi.icon}</div>
             <div>
-              <div className="text-2xl font-bold text-white">{kpi.value}</div>
-              <div className="text-gray-400 text-xs">{kpi.label}</div>
+              <div className="text-2xl font-bold text-slate-900">{kpi.value}</div>
+              <div className="text-slate-500 text-xs">{kpi.label}</div>
             </div>
           </motion.div>
         ))}
@@ -62,18 +62,18 @@ export default function Dashboard() {
 
       {/* Course Mastery Grid */}
       <div className="card">
-        <h2 className="text-white font-semibold mb-4">Course Mastery Breakdown</h2>
+        <h2 className="text-slate-900 font-semibold mb-4">Course Mastery Breakdown</h2>
         {loading ? (
-          <div className="text-gray-500 text-sm">Loading mastery data...</div>
+          <div className="text-slate-400 text-sm">Loading mastery data...</div>
         ) : mastery?.courses.length === 0 ? (
-          <div className="text-gray-500 text-sm">No courses found. Start learning to see your mastery scores.</div>
+          <div className="text-slate-400 text-sm">No courses found. Start learning to see your mastery scores.</div>
         ) : (
           <div className="space-y-4">
             {mastery!.courses.map((course) => (
               <div key={course.courseId}>
                 <div className="flex justify-between items-center mb-1">
-                  <span className="text-sm text-gray-300">{course.title}</span>
-                  <span className="text-xs text-gray-400 font-mono">{course.masteryScore.toFixed(1)}%</span>
+                  <span className="text-sm text-slate-700 font-medium">{course.title}</span>
+                  <span className="text-xs text-slate-500 font-mono">{course.masteryScore.toFixed(1)}%</span>
                 </div>
                 <div className="mastery-bar">
                   <motion.div
@@ -89,9 +89,9 @@ export default function Dashboard() {
         )}
       </div>
 
-      {/* Knowledge Graph Preview */}
+      {/* Concept Knowledge Graph Preview */}
       <div className="card">
-        <h2 className="text-white font-semibold mb-4">Knowledge Graph</h2>
+        <h2 className="text-slate-900 font-semibold mb-4">Concept Knowledge Graph</h2>
         <KnowledgeGraphMini courses={mastery?.courses ?? []} />
       </div>
     </div>
@@ -105,13 +105,13 @@ function KnowledgeGraphMini({ courses }: { courses: CourseMastery[] }) {
 
   const masteryColor = (score: number) => {
     if (score >= 80) return '#10b981';
-    if (score >= 50) return '#6366f1';
+    if (score >= 50) return '#4f46e5';
     if (score >= 25) return '#f59e0b';
-    return '#4b5563';
+    return '#94a3b8';
   };
 
   if (!courses.length) {
-    return <div className="text-gray-500 text-sm text-center py-8">Complete quizzes to populate the graph</div>;
+    return <div className="text-slate-400 text-sm text-center py-8">Complete quizzes to populate the graph</div>;
   }
 
   return (
@@ -123,7 +123,7 @@ function KnowledgeGraphMini({ courses }: { courses: CourseMastery[] }) {
         return (
           <g key={c.courseId} className="kg-node">
             <line x1={centerX} y1={centerY} x2={x} y2={y} className="kg-edge" />
-            <circle cx={x} cy={y} r={22} fill={masteryColor(c.masteryScore)} opacity={0.85} />
+            <circle cx={x} cy={y} r={22} fill={masteryColor(c.masteryScore)} opacity={0.9} />
             <text x={x} y={y + 1} textAnchor="middle" dominantBaseline="middle" fill="white" fontSize={8} fontWeight="600">
               {c.title.substring(0, 6)}
             </text>
@@ -131,7 +131,7 @@ function KnowledgeGraphMini({ courses }: { courses: CourseMastery[] }) {
         );
       })}
       {/* Center hub */}
-      <circle cx={centerX} cy={centerY} r={28} fill="#6366f1" />
+      <circle cx={centerX} cy={centerY} r={28} fill="#4f46e5" />
       <text x={centerX} y={centerY + 1} textAnchor="middle" dominantBaseline="middle" fill="white" fontSize={9} fontWeight="700">NEXUS</text>
     </svg>
   );
