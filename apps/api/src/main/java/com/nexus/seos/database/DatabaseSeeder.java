@@ -24,8 +24,40 @@ public class DatabaseSeeder implements CommandLineRunner {
     }
 
     @Override
-    @Transactional
     public void run(String... args) throws Exception {
+        // One-time self-healing check to reset SQLite file for VARCHAR UUID migration
+        java.io.File resetFlag = new java.io.File("/data/db_reset_v2.txt");
+        java.io.File localResetFlag = new java.io.File("db_reset_v2.txt");
+        if (!resetFlag.exists() && !localResetFlag.exists()) {
+            System.out.println("====== VARCHAR UUID SCHEMA UPGRADE IN PROGRESS ======");
+            try {
+                java.io.File dbFile = new java.io.File("/data/nexus-seos.db");
+                if (dbFile.exists()) {
+                    dbFile.delete();
+                }
+                java.io.File localDbFile = new java.io.File("nexus-seos.db");
+                if (localDbFile.exists()) {
+                    localDbFile.delete();
+                }
+                try {
+                    resetFlag.getParentFile().mkdirs();
+                    resetFlag.createNewFile();
+                } catch (Exception ignored) {}
+                try {
+                    localResetFlag.createNewFile();
+                } catch (Exception ignored) {}
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            System.out.println("====== RESET COMPLETE. RESTARTING SPRING BOOT ======");
+            System.exit(0);
+        }
+
+        executeSeeder();
+    }
+
+    @Transactional
+    public void executeSeeder() {
         if (courseRepository.count() == 0 || lessonRepository.count() == 0 || conceptRepository.count() == 0) {
             conceptRepository.deleteAll();
             quizRepository.deleteAll();
