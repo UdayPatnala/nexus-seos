@@ -82,3 +82,29 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
+@media print {
+  body {
+    background: #ffffff !important;
+  }
+  /* Hide all UI elements except the certificate overlay container */
+  #root, header, aside, nav, button, .no-print {
+    display: none !important;
+  }
+  #certificate-print-modal {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100% !important;
+    height: 100% !important;
+    background: white !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  #certificate-print-area {
+    border: none !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 2cm !important;
+  }
+}
