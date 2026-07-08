@@ -57,9 +57,6 @@ export default function LandingPage() {
             <Link to="/auth" className="btn-primary px-8 py-3 text-base shadow-lg shadow-indigo-500/15 font-semibold">
               Start Learning Free
             </Link>
-            <a href="https://github.com/UdayPatnala/nexus-seos" target="_blank" rel="noopener noreferrer" className="btn-ghost px-8 py-3 text-base font-semibold border border-slate-200 bg-white">
-              View Source
-            </a>
           </div>
         </motion.div>
 
@@ -215,16 +212,8 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer className="px-6 py-8 bg-slate-900 text-slate-400 border-t border-slate-800 text-center text-sm font-medium">
-        <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-center gap-4">
           <div>© {new Date().getFullYear()} Nexus SEOS. All rights reserved.</div>
-          <div className="flex items-center gap-6">
-            <a href="https://github.com/UdayPatnala/nexus-seos" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
-              GitHub
-            </a>
-            <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
-              Vercel
-            </a>
-          </div>
         </div>
       </footer>
     </div>

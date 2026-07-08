@@ -25,7 +25,7 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-nexus-bg relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 relative overflow-hidden">
       {/* Radial gradient background */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-indigo-500/5 rounded-full blur-3xl" />
