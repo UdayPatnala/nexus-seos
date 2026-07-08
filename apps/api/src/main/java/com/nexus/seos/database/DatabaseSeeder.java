@@ -26,7 +26,11 @@ public class DatabaseSeeder implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) throws Exception {
-        if (courseRepository.count() == 0) {
+        if (courseRepository.count() == 0 || lessonRepository.count() == 0 || conceptRepository.count() == 0) {
+            conceptRepository.deleteAll();
+            lessonRepository.deleteAll();
+            courseRepository.deleteAll();
+            quizRepository.deleteAll();
             
             // 1. Java & Object-Oriented Design
             Course c1 = createCourse("Java & Object-Oriented Design", "Deep study of Java syntax, collections internals, JVM memory, GC tuning, and SOLID design.", "INTERMEDIATE");
