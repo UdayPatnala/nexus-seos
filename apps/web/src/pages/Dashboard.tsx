@@ -80,7 +80,12 @@ export default function Dashboard() {
 
       {/* Dynamic Daily Task Card */}
       {(() => {
-        const dailyChallenge = DAILY_CHALLENGES[new Date().getDate() % DAILY_CHALLENGES.length];
+        // Dynamically compute the challenge level based on user's overall progress (avgMastery)
+        const userLevel = avgMastery < 35 ? 'BEGINNER' : avgMastery < 75 ? 'INTERMEDIATE' : 'ADVANCED';
+        const filtered = DAILY_CHALLENGES.filter(c => c.level === userLevel);
+        const list = filtered.length > 0 ? filtered : DAILY_CHALLENGES;
+        const dailyChallenge = list[new Date().getDate() % list.length];
+
         const levelBadge = (level: string) => {
           const colors: Record<string, string> = {
             BEGINNER: 'bg-emerald-100 text-emerald-700 border-emerald-200',
