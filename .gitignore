@@ -1,0 +1,51 @@
+# Built class files
+*.class
+
+# Log files
+*.log
+
+# Blueprints
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Mobile Tools
+.gradle/
+local.properties
+.navigation/
+
+# Scratch files
+CUsersudayp.geminiantigravity/
+
+# Package Lock / Dependency directories
+node_modules/
+jspm_packages/
+web-bundle/
+
+# Build directories
+target/
+dist/
+out/
+build/
+.gradle/
+.pnpm-store/
+.next/
+
+# Databases
+*.db
+*.db-journal
+*.sqlite
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Env files
+.env
+.env.local
+.env.production
+.env.development
