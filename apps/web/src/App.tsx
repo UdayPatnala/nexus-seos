@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard';
 import CoursesPage from './pages/CoursesPage';
 import Workbench from './pages/Workbench';
 import WorkspaceChat from './pages/WorkspaceChat';
+import LandingPage from './pages/LandingPage';
 
 function ProtectedRoutes() {
   const { user, loading } = useAuth();
@@ -34,8 +35,10 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+          <Route path="/" element={<LandingPage />} />
           <Route path="/auth" element={<AuthPageWrapper />} />
-          <Route path="/*" element={<ProtectedRoutes />} />
+          <Route path="/dashboard/*" element={<ProtectedRoutes />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
@@ -44,7 +47,7 @@ export default function App() {
 
 function AuthPageWrapper() {
   const { user } = useAuth();
-  if (user) return <Navigate to="/" replace />;
+  if (user) return <Navigate to="/dashboard" replace />;
   return <AuthPage />;
 }
 

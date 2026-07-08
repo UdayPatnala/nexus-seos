@@ -3,10 +3,10 @@ import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 
 const NAV = [
-  { to: '/', label: 'Dashboard', icon: '⚡', end: true },
-  { to: '/courses', label: 'Courses', icon: '📚' },
-  { to: '/workbench', label: 'Workbench', icon: '💻' },
-  { to: '/chat', label: 'AI Personas', icon: '🤖' },
+  { to: '/dashboard', label: 'Dashboard', icon: '⚡', end: true },
+  { to: '/dashboard/courses', label: 'Courses', icon: '📚' },
+  { to: '/dashboard/workbench', label: 'Workbench', icon: '💻' },
+  { to: '/dashboard/chat', label: 'AI Personas', icon: '🤖' },
 ];
 
 export default function AppShell() {
