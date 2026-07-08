@@ -52,25 +52,25 @@ export default function CoursesPage() {
   };
 
   const diffBadge = (d: string) => ({
-    BEGINNER: 'bg-emerald-500/20 text-emerald-400',
-    INTERMEDIATE: 'bg-amber-500/20 text-amber-400',
-    ADVANCED: 'bg-red-500/20 text-red-400',
-  }[d] || 'bg-gray-600/20 text-gray-400');
+    BEGINNER: 'bg-emerald-100 text-emerald-700 border border-emerald-200',
+    INTERMEDIATE: 'bg-amber-100 text-amber-700 border border-amber-200',
+    ADVANCED: 'bg-red-100 text-red-700 border border-red-200',
+  }[d] || 'bg-slate-100 text-slate-600 border border-slate-200');
 
   return (
-    <div className="flex h-full overflow-hidden">
+    <div className="flex h-full overflow-hidden bg-slate-50">
       {/* Courses list */}
-      <div className="w-56 border-r border-gray-800 overflow-y-auto p-3 space-y-2 shrink-0">
-        <div className="text-xs text-gray-500 uppercase tracking-widest px-2 mb-2">Courses</div>
+      <div className="w-56 border-r border-slate-200 overflow-y-auto p-3 space-y-2 shrink-0 bg-white">
+        <div className="text-xs text-slate-400 font-semibold uppercase tracking-widest px-2 mb-2">Courses</div>
         {courses.length === 0
-          ? <div className="text-gray-600 text-xs px-2">No courses seeded yet</div>
+          ? <div className="text-slate-500 text-xs px-2">No courses seeded yet</div>
           : courses.map(c => (
             <button key={c.id} onClick={() => selectCourse(c)}
-              className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all ${
-                selected?.id === c.id ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30' : 'text-gray-400 hover:bg-white/5 hover:text-white'
+              className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-all ${
+                selected?.id === c.id ? 'bg-indigo-500/10 text-indigo-700 border border-indigo-500/20 font-medium' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
               }`}>
-              <div className="font-medium truncate">{c.title}</div>
-              <span className={`text-xs px-1.5 py-0.5 rounded mt-1 inline-block ${diffBadge(c.difficulty)}`}>{c.difficulty}</span>
+              <div className="font-semibold truncate">{c.title}</div>
+              <span className={`text-xs px-1.5 py-0.5 rounded mt-1.5 inline-block ${diffBadge(c.difficulty)}`}>{c.difficulty}</span>
             </button>
           ))
         }
@@ -78,11 +78,11 @@ export default function CoursesPage() {
 
       {/* Lessons */}
       {selected && (
-        <div className="w-44 border-r border-gray-800 overflow-y-auto p-3 space-y-1 shrink-0">
-          <div className="text-xs text-gray-500 uppercase tracking-widest px-2 mb-2">Lessons</div>
+        <div className="w-48 border-r border-slate-200 overflow-y-auto p-3 space-y-1 shrink-0 bg-white">
+          <div className="text-xs text-slate-400 font-semibold uppercase tracking-widest px-2 mb-2">Lessons</div>
           {lessons.map(l => (
             <button key={l.id} onClick={() => selectLesson(l)}
-              className="w-full text-left px-3 py-2 rounded-lg text-xs text-gray-400 hover:bg-white/5 hover:text-white transition-all">
+              className="w-full text-left px-3 py-2 rounded-lg text-xs text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all font-medium">
               {l.title}
             </button>
           ))}
@@ -91,12 +91,12 @@ export default function CoursesPage() {
 
       {/* Concepts */}
       {concepts.length > 0 && (
-        <div className="w-44 border-r border-gray-800 overflow-y-auto p-3 space-y-1 shrink-0">
-          <div className="text-xs text-gray-500 uppercase tracking-widest px-2 mb-2">Concepts</div>
+        <div className="w-48 border-r border-slate-200 overflow-y-auto p-3 space-y-1 shrink-0 bg-white">
+          <div className="text-xs text-slate-400 font-semibold uppercase tracking-widest px-2 mb-2">Concepts</div>
           {concepts.map(c => (
             <button key={c.id} onClick={() => openConcept(c)}
               className={`w-full text-left px-3 py-2 rounded-lg text-xs transition-all ${
-                activeConcept?.id === c.id ? 'text-indigo-300 bg-indigo-500/10' : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                activeConcept?.id === c.id ? 'text-indigo-700 bg-indigo-500/10 font-semibold border border-indigo-500/20' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
               }`}>
               {c.title}
             </button>
@@ -105,33 +105,33 @@ export default function CoursesPage() {
       )}
 
       {/* Concept detail + Notes */}
-      <div className="flex-1 overflow-y-auto p-6 min-w-0">
+      <div className="flex-1 overflow-y-auto p-6 min-w-0 bg-slate-50">
         {!activeConcept ? (
-          <div className="text-center text-gray-600 pt-20 text-sm">Select a course → lesson → concept to begin</div>
+          <div className="text-center text-slate-400 pt-20 text-sm">Select a course → lesson → concept to begin</div>
         ) : (
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 max-w-2xl">
             <div>
-              <h2 className="text-xl font-bold text-white mb-3">{activeConcept.title}</h2>
-              <div className="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap bg-gray-900/50 rounded-xl p-4 border border-gray-800">
+              <h2 className="text-xl font-bold text-slate-900 mb-3">{activeConcept.title}</h2>
+              <div className="text-slate-800 text-sm leading-relaxed whitespace-pre-wrap bg-white rounded-xl p-5 border border-slate-200 shadow-sm markdown-body">
                 {activeConcept.content || 'No content yet.'}
               </div>
             </div>
 
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-gray-300">📝 My Notes</span>
+                <span className="text-sm font-semibold text-slate-700">📝 My Notes</span>
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={saveNote}
                   disabled={savingNote}
-                  className={`text-xs px-3 py-1.5 rounded-lg transition-all ${
-                    noteSuccess ? 'bg-emerald-500 text-white' : 'btn-primary'
+                  className={`text-xs px-3 py-1.5 rounded-lg transition-all font-medium ${
+                    noteSuccess ? 'bg-emerald-600 text-white shadow-sm shadow-emerald-500/20' : 'btn-primary shadow-sm shadow-indigo-500/10'
                   }`}>
                   {noteSuccess ? '✓ Saved' : savingNote ? 'Saving...' : 'Save Note'}
                 </motion.button>
               </div>
               <textarea
-                className="input-field font-mono text-sm"
+                className="input-field font-mono text-sm shadow-sm bg-white text-slate-800"
                 rows={8}
                 placeholder="Write Markdown notes here..."
                 value={note}

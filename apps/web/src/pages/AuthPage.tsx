@@ -28,32 +28,32 @@ export default function AuthPage() {
     <div className="min-h-screen flex items-center justify-center bg-nexus-bg relative overflow-hidden">
       {/* Radial gradient background */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-indigo-900/20 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-indigo-500/5 rounded-full blur-3xl" />
       </div>
 
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="w-full max-w-md glass rounded-2xl p-8 relative z-10"
+        className="w-full max-w-md glass rounded-2xl p-8 relative z-10 shadow-lg"
       >
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 mb-3">
-            <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center text-white font-bold text-lg">N</div>
-            <span className="text-2xl font-bold text-white">Nexus SEOS</span>
+            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">N</div>
+            <span className="text-2xl font-bold text-slate-900">Nexus SEOS</span>
           </div>
-          <p className="text-gray-400 text-sm">Software Engineering Operating System</p>
+          <p className="text-slate-500 text-sm font-medium">Software Engineering Operating System</p>
         </div>
 
         {/* Tabs */}
-        <div className="flex rounded-lg bg-gray-800/50 p-1 mb-6">
+        <div className="flex rounded-lg bg-slate-100 p-1 mb-6">
           {(['login', 'register'] as const).map((m) => (
             <button
               key={m}
               onClick={() => setMode(m)}
-              className={`flex-1 py-2 text-sm font-medium rounded-md transition-all ${
-                mode === m ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:text-white'
+              className={`flex-1 py-2 text-sm font-semibold rounded-md transition-all ${
+                mode === m ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-900'
               }`}
             >
               {m === 'login' ? 'Sign In' : 'Sign Up'}
@@ -64,9 +64,9 @@ export default function AuthPage() {
         <form onSubmit={submit} className="space-y-4">
           {mode === 'register' && (
             <div>
-              <label className="text-xs text-gray-400 mb-1 block">Full Name</label>
+              <label className="text-xs font-semibold text-slate-600 mb-1 block">Full Name</label>
               <input
-                className="input-field"
+                className="input-field shadow-sm bg-white"
                 placeholder="Jane Doe"
                 value={fullName}
                 onChange={e => setFullName(e.target.value)}
@@ -75,9 +75,9 @@ export default function AuthPage() {
             </div>
           )}
           <div>
-            <label className="text-xs text-gray-400 mb-1 block">Email</label>
+            <label className="text-xs font-semibold text-slate-600 mb-1 block">Email</label>
             <input
-              className="input-field"
+              className="input-field shadow-sm bg-white"
               type="email"
               placeholder="you@nexus.dev"
               value={email}
@@ -86,9 +86,9 @@ export default function AuthPage() {
             />
           </div>
           <div>
-            <label className="text-xs text-gray-400 mb-1 block">Password</label>
+            <label className="text-xs font-semibold text-slate-600 mb-1 block">Password</label>
             <input
-              className="input-field"
+              className="input-field shadow-sm bg-white"
               type="password"
               placeholder="••••••••"
               value={password}
@@ -98,7 +98,7 @@ export default function AuthPage() {
           </div>
 
           {error && (
-            <div className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">
+            <div className="text-red-700 text-sm bg-red-50 border border-red-200 rounded-lg px-3 py-2">
               {error}
             </div>
           )}
@@ -107,7 +107,7 @@ export default function AuthPage() {
             whileTap={{ scale: 0.97 }}
             type="submit"
             disabled={loading}
-            className="btn-primary w-full mt-2 flex items-center justify-center gap-2"
+            className="btn-primary w-full mt-2 flex items-center justify-center gap-2 shadow-md shadow-indigo-500/10"
           >
             {loading ? (
               <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
