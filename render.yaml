@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: nexus-seos-api
+    env: docker
+    dockerfilePath: apps/api/Dockerfile
+    dockerContext: apps/api
+    plan: starter
+    disk:
+      name: nexus-db-volume
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: SPRING_DATASOURCE_URL
+        value: jdbc:sqlite:/data/nexus-seos.db
