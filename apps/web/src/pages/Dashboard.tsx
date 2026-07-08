@@ -1,9 +1,19 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
 interface CourseMastery { courseId: string; title: string; masteryScore: number; }
+
+const DAILY_CHALLENGES = [
+  { title: "GC Root Profiling & Memory Leak Mitigation", desc: "Profile memory leaks inside the JVM and write heap analysis routines in the workbench.", level: "ADVANCED", icon: "⚙️" },
+  { title: "Thread-Safe Connection Pool implementation", desc: "Build a thread-safe connection pooling system in Java utilizing double-checked locking.", level: "INTERMEDIATE", icon: "🧵" },
+  { title: "Multi-Stage Docker Container Optimization", desc: "Write multi-stage Docker builds to compile Spring Boot apps and minimize JRE footprints.", level: "INTERMEDIATE", icon: "🐳" },
+  { title: "Token Bucket Rate Limiting Filter", desc: "Build an API rate limiting filter using Redis token-bucket rules.", level: "ADVANCED", icon: "🛡️" },
+  { title: "Composite Index Tuning & SQL Join Optimization", desc: "Create optimal composite indexes to tune execution plans for complex queries.", level: "BEGINNER", icon: "💾" },
+  { title: "CI/CD Pipeline Workflow Automation", desc: "Structure a GitHub Actions workflow to run Maven testing and deploy frontend to Vercel.", level: "BEGINNER", icon: "🚀" }
+];
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -67,6 +77,49 @@ export default function Dashboard() {
           </motion.div>
         ))}
       </div>
+
+      {/* Dynamic Daily Task Card */}
+      {(() => {
+        const dailyChallenge = DAILY_CHALLENGES[new Date().getDate() % DAILY_CHALLENGES.length];
+        const levelBadge = (level: string) => {
+          const colors: Record<string, string> = {
+            BEGINNER: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+            INTERMEDIATE: 'bg-amber-100 text-amber-700 border-amber-200',
+            ADVANCED: 'bg-red-100 text-red-700 border-red-200'
+          };
+          return colors[level] || 'bg-slate-100 text-slate-700 border-slate-200';
+        };
+
+        return (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-350 flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
+          >
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-2xl shrink-0">
+                {dailyChallenge.icon}
+              </div>
+              <div className="space-y-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h3 className="font-bold text-slate-900 text-base">🎯 Daily Mastery Challenge</h3>
+                  <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold border uppercase tracking-wider ${levelBadge(dailyChallenge.level)}`}>
+                    {dailyChallenge.level}
+                  </span>
+                </div>
+                <p className="text-slate-800 font-semibold text-sm">{dailyChallenge.title}</p>
+                <p className="text-slate-500 text-xs leading-relaxed max-w-2xl">{dailyChallenge.desc}</p>
+              </div>
+            </div>
+            <Link
+              to="/dashboard/workbench"
+              className="btn-primary text-xs shrink-0 self-stretch md:self-auto flex items-center justify-center"
+            >
+              Start Challenge
+            </Link>
+          </motion.div>
+        );
+      })()}
 
       {/* Grid Layout for details */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
