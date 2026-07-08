@@ -5,7 +5,6 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "preinstall": "npx only-allow pnpm",
     "build": "pnpm --recursive run build",
     "dev": "pnpm --parallel run dev",
     "test": "pnpm --recursive run test",
