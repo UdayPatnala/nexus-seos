@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import html2canvas from 'html2canvas';
 
 interface Course { id: string; title: string; description: string; difficulty: string; }
 interface Lesson { id: string; title: string; }
@@ -45,6 +46,26 @@ export default function CoursesPage() {
       }
     } catch (e) {
       console.error("Instant complete failed", e);
+    }
+  };
+
+  const downloadCertificate = async () => {
+    const element = document.getElementById('certificate-print-area');
+    if (!element) return;
+    try {
+      // Hide borders or modify style temporarily if needed during capture
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+      });
+      const dataUrl = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.download = `${selected?.title.replace(/[^a-z0-9]/gi, '_') || 'Course'}_Certificate.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (e) {
+      console.error("Certificate download failed", e);
     }
   };
 
@@ -328,6 +349,13 @@ export default function CoursesPage() {
                     className="px-3.5 py-1.5 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-xs font-semibold transition-colors"
                   >
                     Close
+                  </button>
+                  <button
+                    onClick={downloadCertificate}
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-all"
+                  >
+                    <span>📥</span>
+                    <span>Download PNG</span>
                   </button>
                   <button
                     onClick={() => window.print()}

@@ -46,11 +46,33 @@ public class DatabaseSeeder implements CommandLineRunner {
     @Transactional
     public void executeSeeder() {
         seedUsers();
-        if (courseRepository.count() == 0 || lessonRepository.count() == 0 || conceptRepository.count() == 0) {
-            conceptRepository.deleteAll();
-            quizRepository.deleteAll();
-            lessonRepository.deleteAll();
-            courseRepository.deleteAll();
+        
+        boolean needsReset = false;
+        try {
+            if (courseRepository.count() == 0 || lessonRepository.count() == 0 || conceptRepository.count() == 0) {
+                needsReset = true;
+            } else {
+                // Verify we can successfully fetch lessons for a course to catch UUID type mismatch
+                Course first = courseRepository.findAll().get(0);
+                if (lessonRepository.findByCourseIdOrderByOrderNoAsc(first.getId()).isEmpty()) {
+                    needsReset = true;
+                }
+            }
+        } catch (Exception e) {
+            needsReset = true;
+        }
+
+        if (needsReset) {
+            System.out.println("====== DB SCHEMA RESET/RE-SEED REQUIRED ======");
+            // Clear everything to ensure clean foreign key states and correct column types
+            entityManager.createNativeQuery("PRAGMA foreign_keys = OFF;").executeUpdate();
+            entityManager.createNativeQuery("DELETE FROM concept_completions;").executeUpdate();
+            entityManager.createNativeQuery("DELETE FROM quiz_attempts;").executeUpdate();
+            entityManager.createNativeQuery("DELETE FROM concepts;").executeUpdate();
+            entityManager.createNativeQuery("DELETE FROM quizzes;").executeUpdate();
+            entityManager.createNativeQuery("DELETE FROM lessons;").executeUpdate();
+            entityManager.createNativeQuery("DELETE FROM courses;").executeUpdate();
+            entityManager.createNativeQuery("PRAGMA foreign_keys = ON;").executeUpdate();
             
             // 1. Java & Object-Oriented Design
             Course c1 = createCourse("Java & Object-Oriented Design", "Deep study of Java syntax, collections internals, JVM memory, GC tuning, and SOLID design.", "INTERMEDIATE");
@@ -217,7 +239,7 @@ public class DatabaseSeeder implements CommandLineRunner {
     }
 
     private void seedUsers() {
-        if (userRepository.count() != 10) {
+        if (userRepository.count() != 10 || userRepository.findByAccessKey("NEXUS-DEMO-Z9F2X7").isEmpty()) {
             System.out.println("====== SEEDING ACCESS KEY PROFILES ======");
             // Drop existing users and profiles safely using native SQL
             entityManager.createNativeQuery("PRAGMA foreign_keys = OFF;").executeUpdate();
@@ -231,13 +253,24 @@ public class DatabaseSeeder implements CommandLineRunner {
             entityManager.createNativeQuery("PRAGMA foreign_keys = ON;").executeUpdate();
 
             // Create 10 users
-            // 1 Demo User
-            createUserWithKey("NEXUS-DEMO-01", "demo@nexus.dev", "Demo Profile", true);
-            // 9 Normal Users
-            for (int i = 2; i <= 10; i++) {
-                String key = String.format("NEXUS-KEY-%02d", i);
-                String email = String.format("user%02d@nexus.dev", i);
-                String name = String.format("Profile %02d", i);
+            // 1 Demo User (Complex Key)
+            createUserWithKey("NEXUS-DEMO-Z9F2X7", "demo@nexus.dev", "Demo Profile", true);
+            // 9 Normal Users with complex, randomized keys
+            String[] randomKeys = {
+                "NEXUS-KEY-K3P7X9W2",
+                "NEXUS-KEY-R8N5J4Y6",
+                "NEXUS-KEY-H2M9Q6V4",
+                "NEXUS-KEY-T5F1S8B3",
+                "NEXUS-KEY-L4X7Z2P9",
+                "NEXUS-KEY-W9C3D6Y8",
+                "NEXUS-KEY-M1N8P5Q2",
+                "NEXUS-KEY-V7B2F6K9",
+                "NEXUS-KEY-J4H9D3S7"
+            };
+            for (int i = 0; i < randomKeys.length; i++) {
+                String key = randomKeys[i];
+                String email = String.format("user%02d@nexus.dev", i + 2);
+                String name = String.format("Profile %02d", i + 2);
                 createUserWithKey(key, email, name, false);
             }
             System.out.println("====== SEEDED 10 ACCESS KEY PROFILES ======");
