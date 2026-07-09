@@ -49,3 +49,6 @@ Thumbs.db
 .env.local
 .env.production
 .env.development
+
+# Private access keys file
+access_keys.txt
