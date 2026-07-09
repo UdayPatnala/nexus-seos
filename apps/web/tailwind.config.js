@@ -8,14 +8,14 @@ export default {
     extend: {
       colors: {
         nexus: {
-          bg: '#0a0e1a',
-          surface: '#111827',
-          border: '#1f2937',
-          accent: '#6366f1',
-          'accent-dark': '#4f46e5',
-          muted: '#374151',
-          text: '#f9fafb',
-          subtle: '#9ca3af',
+          bg: '#f8fafc',
+          surface: '#ffffff',
+          border: '#e2e8f0',
+          accent: '#4f46e5',
+          'accent-dark': '#4338ca',
+          muted: '#f1f5f9',
+          text: '#0f172a',
+          subtle: '#64748b',
         }
       },
       fontFamily: {

@@ -40,13 +40,13 @@ export default function Workbench() {
   };
 
   return (
-    <div className="flex flex-col h-full overflow-hidden">
+    <div className="flex flex-col h-full overflow-hidden bg-slate-50">
       {/* Toolbar */}
-      <div className="flex items-center gap-3 px-4 py-2 border-b border-gray-800 shrink-0">
+      <div className="flex items-center gap-3 px-4 py-2 border-b border-slate-200 bg-white shrink-0">
         <select
           value={language}
           onChange={e => setLanguage(e.target.value)}
-          className="bg-gray-800 border border-gray-700 text-white text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:border-indigo-500"
+          className="bg-slate-100 border border-slate-300 text-slate-700 text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:border-indigo-500"
         >
           {LANG_OPTIONS.map(l => <option key={l} value={l}>{l}</option>)}
         </select>
@@ -63,7 +63,7 @@ export default function Workbench() {
         </motion.button>
         {output && (
           <span className={`text-xs px-2 py-0.5 rounded-full font-mono ${
-            output.status === 'SUCCESS' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'
+            output.status === 'SUCCESS' ? 'bg-emerald-100 text-emerald-700 border border-emerald-200' : 'bg-red-100 text-red-700 border border-red-200'
           }`}>
             {output.status}
           </span>
@@ -77,7 +77,7 @@ export default function Workbench() {
           language={language}
           value={code}
           onChange={val => setCode(val ?? '')}
-          theme="vs-dark"
+          theme="vs"
           options={{
             fontSize: 14,
             fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
@@ -101,21 +101,21 @@ export default function Workbench() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="shrink-0 border-t border-gray-800 bg-gray-950 font-mono text-sm overflow-auto"
+            className="shrink-0 border-t border-slate-200 bg-slate-900 font-mono text-sm overflow-auto"
             style={{ maxHeight: '35%' }}
           >
-            <div className="flex items-center gap-2 px-4 py-1.5 border-b border-gray-800">
-              <span className="text-gray-500 text-xs">TERMINAL</span>
+            <div className="flex items-center gap-2 px-4 py-1.5 border-b border-slate-800 bg-slate-950">
+              <span className="text-slate-400 text-xs">TERMINAL</span>
             </div>
             <div className="px-4 py-3 space-y-1">
               {output.stdout && (
-                <pre className="text-gray-200 whitespace-pre-wrap leading-relaxed">{output.stdout}</pre>
+                <pre className="text-slate-100 whitespace-pre-wrap leading-relaxed">{output.stdout}</pre>
               )}
               {output.stderr && (
                 <pre className="text-red-400 whitespace-pre-wrap leading-relaxed">{output.stderr}</pre>
               )}
               {!output.stdout && !output.stderr && (
-                <span className="text-gray-600">(no output)</span>
+                <span className="text-slate-500">(no output)</span>
               )}
             </div>
           </motion.div>
