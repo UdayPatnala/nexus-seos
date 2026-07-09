@@ -1,9 +1,8 @@
 {
   "cleanUrls": true,
   "rewrites": [
-    {
-      "source": "/((?!api/|assets/|favicon.svg).*)",
-      "destination": "/index.html"
-    }
+    { "source": "/auth", "destination": "/index.html" },
+    { "source": "/dashboard", "destination": "/index.html" },
+    { "source": "/dashboard/:path*", "destination": "/index.html" }
   ]
 }
