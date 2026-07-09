@@ -25,6 +25,7 @@ public class Course {
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private List<Lesson> lessons;
 
     public Course() {}

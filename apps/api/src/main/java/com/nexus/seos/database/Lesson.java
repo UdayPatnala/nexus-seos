@@ -24,6 +24,7 @@ public class Lesson {
     private Integer orderNo;
 
     @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private List<Concept> concepts;
 
     public Lesson() {}
