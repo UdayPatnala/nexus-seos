@@ -4,6 +4,8 @@ import com.nexus.seos.database.Repositories.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import jakarta.persistence.EntityManager;
 
 @Component
 public class DatabaseSeeder implements CommandLineRunner {
@@ -12,24 +14,38 @@ public class DatabaseSeeder implements CommandLineRunner {
     private final LessonRepository lessonRepository;
     private final ConceptRepository conceptRepository;
     private final QuizRepository quizRepository;
+    private final UserRepository userRepository;
+    private final ProfileRepository profileRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final EntityManager entityManager;
 
     public DatabaseSeeder(CourseRepository courseRepository,
                           LessonRepository lessonRepository,
                           ConceptRepository conceptRepository,
-                          QuizRepository quizRepository) {
+                          QuizRepository quizRepository,
+                          UserRepository userRepository,
+                          ProfileRepository profileRepository,
+                          PasswordEncoder passwordEncoder,
+                          EntityManager entityManager) {
         this.courseRepository = courseRepository;
         this.lessonRepository = lessonRepository;
         this.conceptRepository = conceptRepository;
         this.quizRepository = quizRepository;
+        this.userRepository = userRepository;
+        this.profileRepository = profileRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.entityManager = entityManager;
     }
 
     @Override
+    @Transactional
     public void run(String... args) throws Exception {
         executeSeeder();
     }
 
     @Transactional
     public void executeSeeder() {
+        seedUsers();
         if (courseRepository.count() == 0 || lessonRepository.count() == 0 || conceptRepository.count() == 0) {
             conceptRepository.deleteAll();
             quizRepository.deleteAll();
@@ -198,5 +214,49 @@ public class DatabaseSeeder implements CommandLineRunner {
         q.setLessonId(lesson.getId());
         q.setTitle(title);
         quizRepository.save(q);
+    }
+
+    private void seedUsers() {
+        if (userRepository.count() != 10) {
+            System.out.println("====== SEEDING ACCESS KEY PROFILES ======");
+            // Drop existing users and profiles safely using native SQL
+            entityManager.createNativeQuery("PRAGMA foreign_keys = OFF;").executeUpdate();
+            entityManager.createNativeQuery("DELETE FROM profiles;").executeUpdate();
+            entityManager.createNativeQuery("DELETE FROM executions;").executeUpdate();
+            entityManager.createNativeQuery("DELETE FROM projects;").executeUpdate();
+            entityManager.createNativeQuery("DELETE FROM notes;").executeUpdate();
+            entityManager.createNativeQuery("DELETE FROM quiz_attempts;").executeUpdate();
+            entityManager.createNativeQuery("DELETE FROM concept_completions;").executeUpdate();
+            entityManager.createNativeQuery("DELETE FROM users;").executeUpdate();
+            entityManager.createNativeQuery("PRAGMA foreign_keys = ON;").executeUpdate();
+
+            // Create 10 users
+            // 1 Demo User
+            createUserWithKey("NEXUS-DEMO-01", "demo@nexus.dev", "Demo Profile", true);
+            // 9 Normal Users
+            for (int i = 2; i <= 10; i++) {
+                String key = String.format("NEXUS-KEY-%02d", i);
+                String email = String.format("user%02d@nexus.dev", i);
+                String name = String.format("Profile %02d", i);
+                createUserWithKey(key, email, name, false);
+            }
+            System.out.println("====== SEEDED 10 ACCESS KEY PROFILES ======");
+        }
+    }
+
+    private void createUserWithKey(String key, String email, String fullName, boolean isDemo) {
+        User user = new User();
+        user.setEmail(email);
+        user.setPasswordHash(passwordEncoder.encode("nexus")); // default dummy password
+        user.setAccessKey(key);
+        user.setDemo(isDemo);
+        User savedUser = userRepository.saveAndFlush(user);
+
+        Profile profile = new Profile();
+        profile.setUser(savedUser);
+        profile.setFullName(fullName);
+        profile.setBio("Access Key user account.");
+        profile.setAvatarUrl("");
+        profileRepository.saveAndFlush(profile);
     }
 }

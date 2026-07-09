@@ -18,6 +18,7 @@ public class CourseController {
     private final QuizRepository quizRepository;
     private final QuizAttemptRepository quizAttemptRepository;
     private final ConceptCompletionRepository conceptCompletionRepository;
+    private final UserRepository userRepository;
     private final MasteryService masteryService;
     private final JwtTokenProvider tokenProvider;
 
@@ -25,13 +26,14 @@ public class CourseController {
     public CourseController(CourseRepository courseRepository, LessonRepository lessonRepository,
                             ConceptRepository conceptRepository, QuizRepository quizRepository,
                             QuizAttemptRepository quizAttemptRepository, ConceptCompletionRepository conceptCompletionRepository,
-                            MasteryService masteryService, JwtTokenProvider tokenProvider) {
+                            UserRepository userRepository, MasteryService masteryService, JwtTokenProvider tokenProvider) {
         this.courseRepository = courseRepository;
         this.lessonRepository = lessonRepository;
         this.conceptRepository = conceptRepository;
         this.quizRepository = quizRepository;
         this.quizAttemptRepository = quizAttemptRepository;
         this.conceptCompletionRepository = conceptCompletionRepository;
+        this.userRepository = userRepository;
         this.masteryService = masteryService;
         this.tokenProvider = tokenProvider;
     }
@@ -128,5 +130,53 @@ public class CourseController {
         }
 
         return ResponseEntity.ok(Map.of("conceptId", conceptId, "completed", true));
+    }
+
+    @PostMapping("/{courseId}/complete")
+    public ResponseEntity<?> completeCourse(
+            @PathVariable UUID courseId,
+            @RequestHeader("Authorization") String authHeader) {
+        
+        String token = authHeader.substring(7);
+        UUID userId = tokenProvider.getUserIdFromToken(token);
+        User user = userRepository.findById(userId).orElse(null);
+        
+        if (user == null) {
+            return ResponseEntity.status(404).body(Map.of("error", "User not found."));
+        }
+        
+        if (!user.isDemo()) {
+            return ResponseEntity.status(403).body(Map.of("error", "Only the demo profile can instantly complete courses."));
+        }
+
+        // Fetch all lessons of the course
+        List<Lesson> lessons = lessonRepository.findByCourseIdOrderByOrderNoAsc(courseId);
+        for (Lesson lesson : lessons) {
+            // Complete all concepts in lesson
+            List<Concept> concepts = conceptRepository.findByLessonId(lesson.getId());
+            for (Concept concept : concepts) {
+                Optional<ConceptCompletion> existing = conceptCompletionRepository.findByUserIdAndConceptId(userId, concept.getId());
+                if (existing.isEmpty()) {
+                    ConceptCompletion completion = new ConceptCompletion();
+                    completion.setConceptId(concept.getId());
+                    completion.setUserId(userId);
+                    conceptCompletionRepository.save(completion);
+                }
+            }
+            // Add 100% quiz attempts for all quizzes in lesson
+            List<Quiz> quizzes = quizRepository.findByLessonId(lesson.getId());
+            for (Quiz quiz : quizzes) {
+                List<QuizAttempt> existingAttempts = quizAttemptRepository.findByQuizIdAndUserId(quiz.getId(), userId);
+                if (existingAttempts.isEmpty()) {
+                    QuizAttempt attempt = new QuizAttempt();
+                    attempt.setQuizId(quiz.getId());
+                    attempt.setUserId(userId);
+                    attempt.setScore(100.0);
+                    quizAttemptRepository.save(attempt);
+                }
+            }
+        }
+        
+        return ResponseEntity.ok(Map.of("courseId", courseId, "completed", true));
     }
 }

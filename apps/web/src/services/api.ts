@@ -22,8 +22,8 @@ export const api = {
   auth: {
     register: (email: string, password: string, fullName: string) =>
       request('POST', '/auth/register', { email, password, fullName }),
-    login: (email: string, password: string) =>
-      request('POST', '/auth/login', { email, password }),
+    login: (accessKey: string) =>
+      request('POST', '/auth/login', { accessKey }),
     me: () => request('GET', '/auth/me'),
   },
   courses: {
@@ -35,6 +35,8 @@ export const api = {
       request('POST', `/courses/quizzes/${quizId}/submit`, { score }),
     completeConcept: (conceptId: string) =>
       request('POST', `/courses/concepts/${conceptId}/complete`, {}),
+    complete: (courseId: string) =>
+      request('POST', `/courses/${courseId}/complete`, {}),
     mastery: () => request('GET', '/courses/mastery'),
   },
   notes: {

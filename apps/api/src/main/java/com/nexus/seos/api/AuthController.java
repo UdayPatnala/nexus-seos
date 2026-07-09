@@ -33,50 +33,19 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Map<String, String> request) {
-        String email = request.get("email");
-        if (email != null) {
-            email = email.toLowerCase().trim();
-        }
-        String password = request.get("password");
-        String fullName = request.get("fullName");
-
-        if (email == null || email.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Email is required."));
-        }
-
-        if (userRepository.findByEmail(email).isPresent()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Email is already taken."));
-        }
-
-        User user = new User();
-        user.setEmail(email);
-        user.setPasswordHash(passwordEncoder.encode(password));
-        User savedUser = userRepository.saveAndFlush(user);
-
-        Profile profile = new Profile();
-        profile.setUser(savedUser);
-        profile.setFullName(fullName != null ? fullName : "Nexus Student");
-        profileRepository.saveAndFlush(profile);
-
-        String token = tokenProvider.generateToken(savedUser.getId(), savedUser.getEmail());
-        return ResponseEntity.ok(Map.of("token", token, "email", email, "fullName", profile.getFullName()));
+        return ResponseEntity.badRequest().body(Map.of("error", "Registration is disabled. Use an Access Key to sign in."));
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> request) {
-        String email = request.get("email");
-        if (email != null) {
-            email = email.toLowerCase().trim();
-        }
-        String password = request.get("password");
-
-        if (email == null || email.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Email is required."));
+        String accessKey = request.get("accessKey");
+        if (accessKey == null || accessKey.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Access Key is required."));
         }
 
-        Optional<User> userOpt = userRepository.findByEmail(email);
-        if (userOpt.isEmpty() || !passwordEncoder.matches(password, userOpt.get().getPasswordHash())) {
-            return ResponseEntity.status(401).body(Map.of("error", "Invalid email or password."));
+        Optional<User> userOpt = userRepository.findByAccessKey(accessKey.trim());
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(401).body(Map.of("error", "Invalid Access Key."));
         }
 
         User user = userOpt.get();
@@ -84,7 +53,7 @@ public class AuthController {
         String fullName = profile != null ? profile.getFullName() : "Nexus Student";
 
         String token = tokenProvider.generateToken(user.getId(), user.getEmail());
-        return ResponseEntity.ok(Map.of("token", token, "email", email, "fullName", fullName));
+        return ResponseEntity.ok(Map.of("token", token, "email", user.getEmail(), "fullName", fullName, "isDemo", user.isDemo()));
     }
 
     @GetMapping("/me")
@@ -111,6 +80,7 @@ public class AuthController {
         response.put("fullName", profile != null ? profile.getFullName() : "Nexus Student");
         response.put("bio", profile != null ? profile.getBio() : "");
         response.put("avatarUrl", profile != null ? profile.getAvatarUrl() : "");
+        response.put("isDemo", user.isDemo());
 
         return ResponseEntity.ok(response);
     }

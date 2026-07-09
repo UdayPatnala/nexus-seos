@@ -17,6 +17,12 @@ public class User {
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
+    @Column(name = "access_key", unique = true)
+    private String accessKey;
+
+    @Column(name = "is_demo")
+    private boolean isDemo = false;
+
     @Column(name = "status")
     private String status = "ACTIVE";
 
@@ -83,5 +89,21 @@ public class User {
 
     public void setProfile(Profile profile) {
         this.profile = profile;
+    }
+
+    public String getAccessKey() {
+        return accessKey;
+    }
+
+    public void setAccessKey(String accessKey) {
+        this.accessKey = accessKey;
+    }
+
+    public boolean isDemo() {
+        return isDemo;
+    }
+
+    public void setDemo(boolean demo) {
+        isDemo = demo;
     }
 }

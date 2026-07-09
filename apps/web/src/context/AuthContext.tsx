@@ -2,11 +2,11 @@ import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { api } from '../services/api';
 
-interface User { id: string; email: string; fullName: string; bio: string; avatarUrl: string; }
+interface User { id: string; email: string; fullName: string; bio: string; avatarUrl: string; isDemo?: boolean; }
 interface AuthCtx {
   user: User | null;
   token: string | null;
-  login: (email: string, password: string) => Promise<void>;
+  login: (accessKey: string) => Promise<void>;
   register: (email: string, password: string, fullName: string) => Promise<void>;
   logout: () => void;
   loading: boolean;
@@ -30,18 +30,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [token]);
 
-  const login = async (email: string, password: string) => {
-    const data = await api.auth.login(email, password);
+  const login = async (accessKey: string) => {
+    const data = await api.auth.login(accessKey);
     localStorage.setItem('nexus_token', data.token);
     setToken(data.token);
-    setUser({ id: '', email: data.email, fullName: data.fullName, bio: '', avatarUrl: '' });
+    setUser({ id: '', email: data.email, fullName: data.fullName, bio: '', avatarUrl: '', isDemo: !!data.isDemo });
   };
 
   const register = async (email: string, password: string, fullName: string) => {
     const data = await api.auth.register(email, password, fullName);
     localStorage.setItem('nexus_token', data.token);
     setToken(data.token);
-    setUser({ id: '', email: data.email, fullName: data.fullName, bio: '', avatarUrl: '' });
+    setUser({ id: '', email: data.email, fullName: data.fullName, bio: '', avatarUrl: '', isDemo: !!data.isDemo });
   };
 
   const logout = () => {

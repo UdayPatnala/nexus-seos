@@ -34,6 +34,20 @@ export default function CoursesPage() {
     }).catch(() => {});
   };
 
+  const handleInstantComplete = async (courseId: string) => {
+    try {
+      await api.courses.complete(courseId);
+      loadMastery();
+      if (selected) {
+        // reload lessons list just in case
+        const ls = await api.courses.lessons(selected.id).catch(() => []);
+        setLessons(ls);
+      }
+    } catch (e) {
+      console.error("Instant complete failed", e);
+    }
+  };
+
   useEffect(() => {
     api.courses.list().then(setCourses).catch(() => setCourses([]));
     loadMastery();
@@ -158,6 +172,16 @@ export default function CoursesPage() {
                     />
                   </div>
                 </div>
+
+                {user?.isDemo && courseMastery < 100 && (
+                  <button
+                    onClick={() => handleInstantComplete(selected.id)}
+                    className="w-full py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white rounded-xl text-xs font-semibold shadow-md shadow-emerald-500/10 transition-all flex items-center justify-center gap-1.5 mt-2"
+                  >
+                    <span>⚡</span>
+                    <span>Instant Complete Course (Demo Bypass)</span>
+                  </button>
+                )}
 
                 {/* Completion state or prompt */}
                 {courseMastery === 100 ? (

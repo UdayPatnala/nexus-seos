@@ -11,6 +11,7 @@ public class Repositories {
     @Repository
     public interface UserRepository extends JpaRepository<User, UUID> {
         Optional<User> findByEmail(String email);
+        Optional<User> findByAccessKey(String accessKey);
     }
 
     @Repository
