@@ -3,10 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import html2canvas from 'html2canvas';
+import { staticCourses } from '../data/coursesData';
 
-interface Course { id: string; title: string; description: string; difficulty: string; }
-interface Lesson { id: string; title: string; }
 interface Concept { id: string; title: string; content: string; }
+interface Lesson { id: string; title: string; concepts: Concept[]; }
+interface Course { id: string; title: string; description: string; difficulty: string; lessons: Lesson[]; }
 
 export default function CoursesPage() {
   const { user } = useAuth();
@@ -42,7 +43,10 @@ export default function CoursesPage() {
       if (selected) {
         // reload lessons list just in case
         const ls = await api.courses.lessons(selected.id).catch(() => []);
-        setLessons(ls);
+        if (ls && ls.length > 0) {
+          // If backend returns lessons successfully, we sync, otherwise keep static
+          setLessons(ls);
+        }
       }
     } catch (e) {
       console.error("Instant complete failed", e);
@@ -70,21 +74,21 @@ export default function CoursesPage() {
   };
 
   useEffect(() => {
-    api.courses.list().then(setCourses).catch(() => setCourses([]));
+    setCourses(staticCourses as any);
     loadMastery();
   }, []);
 
   const selectCourse = async (c: Course) => {
-    setSelected(c); setLessons([]); setConcepts([]); setActiveConcept(null);
-    const ls = await api.courses.lessons(c.id).catch(() => []);
-    setLessons(ls);
+    setSelected(c);
+    setLessons(c.lessons || []);
+    setConcepts([]);
+    setActiveConcept(null);
     loadMastery();
   };
 
   const selectLesson = async (l: Lesson) => {
-    setConcepts([]); setActiveConcept(null);
-    const cs = await api.courses.concepts(l.id).catch(() => []);
-    setConcepts(cs);
+    setConcepts(l.concepts || []);
+    setActiveConcept(null);
   };
 
   const openConcept = async (c: Concept) => {
