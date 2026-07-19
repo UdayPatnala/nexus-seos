@@ -55,7 +55,19 @@ public class DatabaseSeeder implements CommandLineRunner {
                 // Verify we can successfully fetch lessons for a course to catch UUID type mismatch
                 Course first = courseRepository.findAll().get(0);
                 if (lessonRepository.findByCourseIdOrderByOrderNoAsc(first.getId()).isEmpty()) {
-                    needsReset = true;
+                    System.out.println("====== SYSTEM DETECTED CORRUPTED SQLite SCHEMA (UUID MISMATCH) ======");
+                    // We must delete the database file and exit to let Hibernate recreate it with correct column types
+                    java.io.File dbFile = new java.io.File("/data/nexus-seos.db");
+                    if (dbFile.exists()) {
+                        System.out.println("Deleting database file: " + dbFile.getAbsolutePath());
+                        dbFile.delete();
+                    }
+                    java.io.File localDbFile = new java.io.File("nexus-seos.db");
+                    if (localDbFile.exists()) {
+                        System.out.println("Deleting local database file");
+                        localDbFile.delete();
+                    }
+                    System.exit(1);
                 }
             }
         } catch (Exception e) {
