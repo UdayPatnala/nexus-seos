@@ -14,7 +14,7 @@ public class Lesson {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", nullable = false)
-    @JsonIgnoreProperties("lessons")
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private Course course;
 
     @Column(name = "title", nullable = false)

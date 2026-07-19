@@ -13,7 +13,7 @@ public class Concept {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lesson_id", nullable = false)
-    @JsonIgnoreProperties("concepts")
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private Lesson lesson;
 
     @Column(name = "title", nullable = false)
