@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import jakarta.persistence.EntityManager;
+import java.util.UUID;
 
 @Component
 public class DatabaseSeeder implements CommandLineRunner {
