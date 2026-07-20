@@ -52,22 +52,29 @@ public class DatabaseSeeder implements CommandLineRunner {
             if (courseRepository.count() == 0 || lessonRepository.count() == 0 || conceptRepository.count() == 0) {
                 needsReset = true;
             } else {
-                // Verify we can successfully fetch lessons for a course to catch UUID type mismatch
-                Course first = courseRepository.findAll().get(0);
-                if (lessonRepository.findByCourseIdOrderByOrderNoAsc(first.getId()).isEmpty()) {
-                    System.out.println("====== SYSTEM DETECTED CORRUPTED SQLite SCHEMA (UUID MISMATCH) ======");
-                    // We must delete the database file and exit to let Hibernate recreate it with correct column types
-                    java.io.File dbFile = new java.io.File("/data/nexus-seos.db");
-                    if (dbFile.exists()) {
-                        System.out.println("Deleting database file: " + dbFile.getAbsolutePath());
-                        dbFile.delete();
+                // Verify if we have static UUID database or the old dynamic UUID database
+                java.util.UUID expectedStaticId = java.util.UUID.fromString("c1111111-1111-1111-1111-111111111111");
+                if (!courseRepository.existsById(expectedStaticId)) {
+                    System.out.println("====== DETECTED OLD DATABASE UUIDs - FORCING RE-SEED ======");
+                    needsReset = true;
+                } else {
+                    // Verify we can successfully fetch lessons for a course to catch UUID type mismatch
+                    Course first = courseRepository.findAll().get(0);
+                    if (lessonRepository.findByCourseIdOrderByOrderNoAsc(first.getId()).isEmpty()) {
+                        System.out.println("====== SYSTEM DETECTED CORRUPTED SQLite SCHEMA (UUID MISMATCH) ======");
+                        // We must delete the database file and exit to let Hibernate recreate it with correct column types
+                        java.io.File dbFile = new java.io.File("/data/nexus-seos.db");
+                        if (dbFile.exists()) {
+                            System.out.println("Deleting database file: " + dbFile.getAbsolutePath());
+                            dbFile.delete();
+                        }
+                        java.io.File localDbFile = new java.io.File("nexus-seos.db");
+                        if (localDbFile.exists()) {
+                            System.out.println("Deleting local database file");
+                            localDbFile.delete();
+                        }
+                        System.exit(1);
                     }
-                    java.io.File localDbFile = new java.io.File("nexus-seos.db");
-                    if (localDbFile.exists()) {
-                        System.out.println("Deleting local database file");
-                        localDbFile.delete();
-                    }
-                    System.exit(1);
                 }
             }
         } catch (Exception e) {
