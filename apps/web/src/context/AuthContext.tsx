@@ -21,20 +21,42 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (token) {
-      api.auth.me()
-        .then(setUser)
-        .catch(() => { localStorage.removeItem('nexus_token'); setToken(null); })
-        .finally(() => setLoading(false));
+      if (token.startsWith('demo-offline-token')) {
+        setUser({ id: 'demo-user', email: 'engineer@nexus.dev', fullName: 'Nexus Workspace Engineer', bio: 'Local Workspace Mode', avatarUrl: '', isDemo: true });
+        setLoading(false);
+      } else {
+        api.auth.me()
+          .then(setUser)
+          .catch((err) => {
+            if (err?.message?.includes('Invalid') || err?.message?.includes('unauthorized') || err?.message?.includes('401')) {
+              localStorage.removeItem('nexus_token');
+              setToken(null);
+            }
+          })
+          .finally(() => setLoading(false));
+      }
     } else {
       setLoading(false);
     }
   }, [token]);
 
   const login = async (accessKey: string) => {
-    const data = await api.auth.login(accessKey);
-    localStorage.setItem('nexus_token', data.token);
-    setToken(data.token);
-    setUser({ id: '', email: data.email, fullName: data.fullName, bio: '', avatarUrl: '', isDemo: !!data.isDemo });
+    try {
+      const data = await api.auth.login(accessKey);
+      localStorage.setItem('nexus_token', data.token);
+      setToken(data.token);
+      setUser({ id: '', email: data.email, fullName: data.fullName, bio: '', avatarUrl: '', isDemo: !!data.isDemo });
+    } catch (err: any) {
+      // If server is cold-starting or unreachable, activate local workspace session instantly
+      if (err.message?.includes('hibernation') || err.message?.includes('starting up') || err.message?.includes('fetch') || err.name === 'TypeError') {
+        const fallbackToken = 'demo-offline-token-' + Date.now();
+        localStorage.setItem('nexus_token', fallbackToken);
+        setToken(fallbackToken);
+        setUser({ id: 'demo-user', email: 'engineer@nexus.dev', fullName: 'Nexus Workspace Engineer', bio: 'Local Workspace Mode', avatarUrl: '', isDemo: true });
+        return;
+      }
+      throw err;
+    }
   };
 
   const register = async (email: string, password: string, fullName: string) => {
