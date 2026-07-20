@@ -8,14 +8,47 @@ const getHeaders = () => {
   };
 };
 
-const request = async (method: string, path: string, body?: unknown) => {
-  const res = await fetch(`${API_BASE}${path}`, {
-    method,
-    headers: getHeaders(),
-    body: body ? JSON.stringify(body) : undefined,
-  });
-  if (!res.ok) throw new Error(`${method} ${path} failed: ${res.status}`);
-  return res.json();
+const request = async (method: string, path: string, body?: unknown, retries = 3): Promise<any> => {
+  let attempt = 0;
+  while (attempt <= retries) {
+    try {
+      const res = await fetch(`${API_BASE}${path}`, {
+        method,
+        headers: getHeaders(),
+        body: body ? JSON.stringify(body) : undefined,
+      });
+
+      if (res.status === 502 || res.status === 503 || res.status === 504) {
+        if (attempt < retries) {
+          attempt++;
+          await new Promise(r => setTimeout(r, 3000));
+          continue;
+        }
+        throw new Error('Server is starting up (Render free instance cold-start). Please wait a moment and try again.');
+      }
+
+      if (!res.ok) {
+        let errMsg = `${method} ${path} failed: ${res.status}`;
+        try {
+          const errJson = await res.json();
+          if (errJson.error) errMsg = errJson.error;
+        } catch {}
+        throw new Error(errMsg);
+      }
+
+      return res.json();
+    } catch (err: any) {
+      if (attempt < retries && (err.name === 'TypeError' || err.message?.includes('fetch'))) {
+        attempt++;
+        await new Promise(r => setTimeout(r, 3000));
+        continue;
+      }
+      if (err.name === 'TypeError' || err.message?.includes('fetch')) {
+        throw new Error('Server is waking up from hibernation (Render cold start). Please click Enter Workspace again in 5-10 seconds.');
+      }
+      throw err;
+    }
+  }
 };
 
 export const api = {
