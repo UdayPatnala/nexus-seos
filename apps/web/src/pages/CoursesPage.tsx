@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import html2canvas from 'html2canvas';
-import { staticCourses, Course, Lesson, Concept, ProjectSpec } from '../data/coursesData';
+import { staticCourses, type Course, type Lesson, type Concept } from '../data/coursesData';
 
 export default function CoursesPage() {
   const { user } = useAuth();
