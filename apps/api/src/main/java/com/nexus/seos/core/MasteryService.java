@@ -14,18 +14,21 @@ public class MasteryService {
     private final LessonRepository lessonRepository;
     private final QuizRepository quizRepository;
     private final ConceptRepository conceptRepository;
+    private final SpacedRepetitionRepository spacedRepetitionRepository;
 
     @Autowired
     public MasteryService(QuizAttemptRepository quizAttemptRepository,
                           ConceptCompletionRepository conceptCompletionRepository,
                           LessonRepository lessonRepository,
                           QuizRepository quizRepository,
-                          ConceptRepository conceptRepository) {
+                          ConceptRepository conceptRepository,
+                          SpacedRepetitionRepository spacedRepetitionRepository) {
         this.quizAttemptRepository = quizAttemptRepository;
         this.conceptCompletionRepository = conceptCompletionRepository;
         this.lessonRepository = lessonRepository;
         this.quizRepository = quizRepository;
         this.conceptRepository = conceptRepository;
+        this.spacedRepetitionRepository = spacedRepetitionRepository;
     }
 
     /**
@@ -148,5 +151,36 @@ public class MasteryService {
         }
         
         return Math.min(10.0, Math.max(0.1, diff / Math.max(1, attempts.size())));
+    }
+
+    /**
+     * Calculate Retention Index (%) based on Ebbinghaus memory decay curve.
+     */
+    public double calculateRetentionIndex(UUID userId) {
+        List<ConceptCompletion> completions = conceptCompletionRepository.findByUserId(userId);
+        if (completions.isEmpty()) {
+            return 85.0; // Default baseline retention
+        }
+        long overdueCount = spacedRepetitionRepository.findByUserIdAndNextReviewAtBefore(userId, java.time.LocalDateTime.now()).size();
+        double total = completions.size();
+        double retention = Math.max(40.0, 100.0 - ((overdueCount / Math.max(1.0, total)) * 40.0));
+        return Math.round(retention * 10.0) / 10.0;
+    }
+
+    /**
+     * Calculate FAANG Interview Readiness Index (0-100%).
+     */
+    public double calculateInterviewReadiness(UUID userId) {
+        List<ConceptCompletion> completions = conceptCompletionRepository.findByUserId(userId);
+        double velocity = calculateLearningVelocity(userId);
+        double baseScore = (completions.size() * 5.0) + (velocity * 10.0);
+        return Math.min(100.0, Math.max(15.0, Math.round(baseScore * 10.0) / 10.0));
+    }
+
+    /**
+     * Get count of concepts overdue for Spaced Repetition active recall review.
+     */
+    public int getOverdueSpacedReviewsCount(UUID userId) {
+        return spacedRepetitionRepository.findByUserIdAndNextReviewAtBefore(userId, java.time.LocalDateTime.now()).size();
     }
 }

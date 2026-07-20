@@ -65,4 +65,11 @@ public class Repositories {
         Optional<ConceptCompletion> findByUserIdAndConceptId(UUID userId, UUID conceptId);
         List<ConceptCompletion> findByUserIdAndConceptIdIn(UUID userId, java.util.Collection<UUID> conceptIds);
     }
+
+    @Repository
+    public interface SpacedRepetitionRepository extends JpaRepository<SpacedRepetition, UUID> {
+        List<SpacedRepetition> findByUserId(UUID userId);
+        Optional<SpacedRepetition> findByUserIdAndConceptId(UUID userId, UUID conceptId);
+        List<SpacedRepetition> findByUserIdAndNextReviewAtBefore(UUID userId, java.time.LocalDateTime dateTime);
+    }
 }
