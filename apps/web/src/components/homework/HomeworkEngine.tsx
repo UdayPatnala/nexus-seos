@@ -1,6 +1,12 @@
 import { useState } from 'react';
 import type { HomeworkAssignment, HomeworkStageType, AdaptiveDifficulty } from '../../types/homeworkTypes';
 import Stage1QuickRecall from './Stage1QuickRecall';
+import Stage2ConceptVerification from './Stage2ConceptVerification';
+import Stage3ConceptApplication from './Stage3ConceptApplication';
+import Stage4PracticalExercises from './Stage4PracticalExercises';
+import Stage5RealWorldScenarios from './Stage5RealWorldScenarios';
+import Stage6ChallengeMode from './Stage6ChallengeMode';
+import Stage7Reflection from './Stage7Reflection';
 
 interface Props {
   assignment: HomeworkAssignment;
@@ -48,6 +54,7 @@ export default function HomeworkEngine({ assignment, onFinishAssignment }: Props
 
   return (
     <div className="space-y-8 max-w-5xl mx-auto p-2">
+      {/* Top Bar */}
       <div className="bg-slate-900 text-white rounded-2xl p-6 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-widest text-indigo-400">
@@ -68,6 +75,7 @@ export default function HomeworkEngine({ assignment, onFinishAssignment }: Props
         </div>
       </div>
 
+      {/* Stage Navigator */}
       <div className="grid grid-cols-7 gap-2">
         {STAGES.map((st, idx) => {
           const isCurrent = idx === currentStageIdx;
@@ -91,22 +99,28 @@ export default function HomeworkEngine({ assignment, onFinishAssignment }: Props
         })}
       </div>
 
-      <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+      {/* Render Stage Component */}
+      <div className="bg-slate-50/50 p-1 rounded-2xl">
         {currentStage.type === 'QUICK_RECALL' && (
           <Stage1QuickRecall items={assignment.stage1Recall} onComplete={handleStageComplete} />
         )}
-        {currentStage.type !== 'QUICK_RECALL' && (
-          <div className="text-center py-12 space-y-4">
-            <span className="text-3xl">🚀</span>
-            <h3 className="text-lg font-bold text-slate-900">Stage {currentStage.number}: {currentStage.label} Active</h3>
-            <p className="text-xs text-slate-500 max-w-sm mx-auto">Demonstrate competency across evaluation tasks to proceed to the next mastery stage.</p>
-            <button
-              onClick={() => handleStageComplete(90, { stage: currentStage.type })}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs px-6 py-2.5 rounded-xl shadow-md"
-            >
-              Complete Stage {currentStage.number} Task
-            </button>
-          </div>
+        {currentStage.type === 'CONCEPT_VERIFICATION' && (
+          <Stage2ConceptVerification questions={assignment.stage2Verification} onComplete={handleStageComplete} />
+        )}
+        {currentStage.type === 'CONCEPT_APPLICATION' && (
+          <Stage3ConceptApplication items={assignment.stage3Application} onComplete={handleStageComplete} />
+        )}
+        {currentStage.type === 'PRACTICAL_EXERCISES' && (
+          <Stage4PracticalExercises exercises={assignment.stage4Practical} onComplete={handleStageComplete} />
+        )}
+        {currentStage.type === 'REAL_WORLD_SCENARIOS' && (
+          <Stage5RealWorldScenarios scenarios={assignment.stage5RealWorld} onComplete={handleStageComplete} />
+        )}
+        {currentStage.type === 'CHALLENGE_MODE' && (
+          <Stage6ChallengeMode challenges={assignment.stage6Challenge} onComplete={handleStageComplete} />
+        )}
+        {currentStage.type === 'REFLECTION' && (
+          <Stage7Reflection items={assignment.stage7Reflection} onComplete={handleStageComplete} />
         )}
       </div>
     </div>

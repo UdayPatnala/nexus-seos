@@ -1,6 +1,7 @@
 import type { HomeworkAssignment } from '../types/homeworkTypes';
 
 export const staticHomeworkAssignments: Record<string, HomeworkAssignment> = {
+  // Lesson 1: Java Memory Architecture
   'lesson-1': {
     id: 'hw-lesson-1',
     lessonId: 'lesson-1',
@@ -28,7 +29,7 @@ export const staticHomeworkAssignments: Record<string, HomeworkAssignment> = {
         question: 'Which garbage collection algorithm phase identifies objects that are no longer reachable from GC roots?',
         options: ['Compaction Phase', 'Mark Phase', 'Sweep Phase', 'Young Generation Copying'],
         correctAnswer: 'Mark Phase',
-        explanation: 'The Mark phase traverses object references starting from GC Roots (stack references, static fields) to label reachable objects.'
+        explanation: 'The Mark phase traverses object references starting from GC Roots to label reachable objects.'
       }
     ],
     stage3Application: [
@@ -63,12 +64,10 @@ export const staticHomeworkAssignments: Record<string, HomeworkAssignment> = {
         architectureSnippet: `Enhancer enhancer = new Enhancer();\nenhancer.setSuperclass(OrderProcessor.class);\nenhancer.setUseCache(false);`,
         tasks: [
           'Identify why setting `useCache(false)` caused Metaspace growth.',
-          'Formulate hotfix for Spring proxy generation.',
-          'Explain how GC handles Metaspace vs Heap.'
+          'Formulate hotfix for Spring proxy generation.'
         ],
         rubric: [
-          'Correctly identifies disabling proxy caching as root cause.',
-          'Explains class metadata lifetime in Metaspace.'
+          'Correctly identifies disabling proxy caching as root cause.'
         ]
       }
     ],
@@ -87,6 +86,80 @@ export const staticHomeworkAssignments: Record<string, HomeworkAssignment> = {
         id: 'ref1',
         prompt: 'Which JVM memory concept was most counter-intuitive or difficult for you today?',
         category: 'DIFFICULTY'
+      }
+    ]
+  },
+
+  // Lesson 2: Concurrency & Lock-Free Data Structures
+  'lesson-2': {
+    id: 'hw-lesson-2',
+    lessonId: 'lesson-2',
+    courseId: 'java-mastery',
+    title: 'Mastery Assignment: Lock-Free Concurrency & CAS (Compare-And-Swap)',
+    estimatedMinutes: 40,
+    stage1Recall: [
+      {
+        id: 'r2-1',
+        frontPrompt: 'What hardware CPU instruction enables non-blocking atomic updates in Java AtomicInteger?',
+        backConceptSummary: 'Compare-And-Swap (CAS) is an atomic CPU instruction that updates a memory location only if it matches expected value.',
+        keyTakeaway: 'CAS avoids expensive thread context switching caused by synchronized OS locks.'
+      }
+    ],
+    stage2Verification: [
+      {
+        id: 'v2-1',
+        type: 'MCQ',
+        question: 'What race condition phenomenon occurs when a CAS location changes from value A to B and back to A before comparison?',
+        options: ['Livelock', 'Deadlock', 'ABA Problem', 'Thread Starvation'],
+        correctAnswer: 'ABA Problem',
+        explanation: 'The ABA problem occurs when a thread sees value A, gets preempted while A changes to B and back to A, misleading the CAS check.'
+      }
+    ],
+    stage3Application: [
+      {
+        id: 'a2-1',
+        type: 'FIND_BUG',
+        prompt: 'Explain the thread-safety flaw in this double-checked locking singleton without volatile:',
+        snippet: `if (instance == null) {\n    synchronized(Helper.class) {\n        if (instance == null) instance = new Helper();\n    }\n}`,
+        solutionExplanation: 'Without `volatile`, instruction reordering allows another thread to observe a non-null reference before object construction completes.'
+      }
+    ],
+    stage4Practical: [
+      {
+        id: 'p2-1',
+        title: 'Implement Lock-Free Atomic Counter using AtomicReference',
+        instructions: 'Write a non-blocking thread-safe counter using CAS loops with AtomicReference.',
+        starterCode: `public class LockFreeCounter {\n    private final AtomicInteger value = new AtomicInteger(0);\n    public void increment() {\n        // TODO: CAS retry loop\n    }\n}`,
+        solutionCode: `public class LockFreeCounter {\n    private final AtomicInteger value = new AtomicInteger(0);\n    public void increment() {\n        int current;\n        do {\n            current = value.get();\n        } while (!value.compareAndSet(current, current + 1));\n    }\n}`,
+        testCases: [{ input: 'increment() x100 threads', expectedOutput: '100' }],
+        hint: 'Use a `do { ... } while (!atomic.compareAndSet(expected, updated));` retry loop.'
+      }
+    ],
+    stage5RealWorld: [
+      {
+        id: 'rw2-1',
+        title: 'High-Throughput Financial Exchange: Thread Contention Bottleneck',
+        businessContext: 'Trading gateway experienced high CPU usage and thread starvation under 100,000 requests/sec.',
+        problemStatement: 'Redesign order queue from `LinkedBlockingQueue` (synchronized lock) to Disruptor RingBuffer (lock-free CAS).',
+        tasks: ['Analyze mutex contention vs lock-free ring buffer', 'Formulate lock-free queue topology'],
+        rubric: ['Identifies mutex lock acquisition overhead in high thread count environment.']
+      }
+    ],
+    stage6Challenge: [
+      {
+        id: 'c2-1',
+        title: 'FAANG Interview: Concurrent Bounded Queue without ReentrantLock',
+        timeLimitSeconds: 900,
+        question: 'Implement a thread-safe Bounded Queue supporting concurrent enqueue/dequeue using atomic CAS arrays.',
+        faangTopicTag: 'High-Frequency Trading & Systems Architecture',
+        expectedOutputOrBehavior: 'Zero lock locks used. High throughput under 64 parallel threads.'
+      }
+    ],
+    stage7Reflection: [
+      {
+        id: 'ref2-1',
+        prompt: 'How does Lock-Free CAS compare with traditional synchronized blocks in terms of throughput vs contention?',
+        category: 'LESSONS_LEARNED'
       }
     ]
   }
