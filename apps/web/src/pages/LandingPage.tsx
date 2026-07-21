@@ -1,9 +1,7 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useAuth } from '../context/AuthContext';
 
 export default function LandingPage() {
-  const { user } = useAuth();
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans">
@@ -14,20 +12,9 @@ export default function LandingPage() {
           <span className="brand-flashy text-xl font-extrabold tracking-tight">Nexus SEOS</span>
         </div>
         <div className="flex items-center gap-4">
-          {user ? (
-            <Link to="/dashboard" className="btn-primary text-sm shadow-md shadow-indigo-500/10">
-              Go to Dashboard
-            </Link>
-          ) : (
-            <>
-              <Link to="/auth" className="text-slate-600 hover:text-slate-900 text-sm font-semibold">
-                Sign In
-              </Link>
-              <Link to="/auth" className="btn-primary text-sm shadow-md shadow-indigo-500/10">
-                Get Started
-              </Link>
-            </>
-          )}
+          <Link to="/dashboard" className="btn-primary text-sm shadow-md shadow-indigo-500/10">
+            Enter Workspace
+          </Link>
         </div>
       </header>
 
@@ -54,7 +41,7 @@ export default function LandingPage() {
             Accelerate your engineering progression. Learn core concepts from JVM internals to system designs, test yourself via quizzes, and write code in an interactive workspace.
           </p>
           <div className="flex items-center justify-center gap-4 pt-4">
-            <Link to="/auth" className="btn-primary px-8 py-3 text-base shadow-lg shadow-indigo-500/15 font-semibold">
+            <Link to="/dashboard" className="btn-primary px-8 py-3 text-base shadow-lg shadow-indigo-500/15 font-semibold">
               Start Learning Free
             </Link>
           </div>

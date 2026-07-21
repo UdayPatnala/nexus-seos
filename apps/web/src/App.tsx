@@ -1,23 +1,13 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import { AuthProvider } from './context/AuthContext';
 import AppShell from './components/AppShell';
-import AuthPage from './pages/AuthPage';
 import Dashboard from './pages/Dashboard';
 import CoursesPage from './pages/CoursesPage';
 import Workbench from './pages/Workbench';
 import WorkspaceChat from './pages/WorkspaceChat';
 import LandingPage from './pages/LandingPage';
 
-function ProtectedRoutes() {
-  const { user, loading } = useAuth();
-  if (loading) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-slate-50">
-        <div className="w-8 h-8 border-2 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin" />
-      </div>
-    );
-  }
-  if (!user) return <Navigate to="/auth" replace />;
+function OpenRoutes() {
   return (
     <Routes>
       <Route element={<AppShell />}>
@@ -36,8 +26,8 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/auth" element={<AuthPageWrapper />} />
-          <Route path="/dashboard/*" element={<ProtectedRoutes />} />
+          <Route path="/auth" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/dashboard/*" element={<OpenRoutes />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
@@ -45,9 +35,4 @@ export default function App() {
   );
 }
 
-function AuthPageWrapper() {
-  const { user } = useAuth();
-  if (user) return <Navigate to="/dashboard" replace />;
-  return <AuthPage />;
-}
 

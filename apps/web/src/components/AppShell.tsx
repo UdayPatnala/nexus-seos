@@ -10,7 +10,7 @@ const NAV = [
 ];
 
 export default function AppShell() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
   return (
     <div className="flex h-screen overflow-hidden bg-slate-100">
@@ -59,12 +59,6 @@ export default function AppShell() {
               <div className="text-slate-500 text-xs truncate">{user?.email}</div>
             </div>
           </div>
-          <button
-            onClick={logout}
-            className="w-full text-left px-3 py-2 text-xs text-slate-500 hover:text-red-500 hover:bg-red-500/5 rounded-lg transition-all mt-1 font-medium"
-          >
-            Sign out
-          </button>
         </div>
       </motion.aside>
 
