@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import type { Stage5RealWorldScenario } from '../../types/homeworkTypes';
+import type { Stage5RealWorldScenario, StageCompletionCallback } from '../../types/homeworkTypes';
 
 interface Props {
   scenarios: Stage5RealWorldScenario[];
-  onComplete: (score: number, answers: Record<string, any>) => void;
+  onComplete: StageCompletionCallback;
 }
 
 export default function Stage5RealWorldScenarios({ scenarios, onComplete }: Props) {
@@ -39,7 +39,7 @@ export default function Stage5RealWorldScenarios({ scenarios, onComplete }: Prop
         </div>
 
         {currentScenario.architectureSnippet && (
-          <pre className="bg-slate-900 text-slate-100 text-xs p-4 rounded-xl font-mono overflow-x-auto">
+          <pre className="bg-slate-900 text-slate-100 text-xs p-4 rounded-xl font-mono overflow-x-auto border border-slate-800">
             <code>{currentScenario.architectureSnippet}</code>
           </pre>
         )}
@@ -50,7 +50,7 @@ export default function Stage5RealWorldScenarios({ scenarios, onComplete }: Prop
           value={response}
           onChange={e => setResponse(e.target.value)}
           placeholder="Draft your incident RCA and production architectural hotfix here..."
-          className="w-full text-xs p-4 rounded-xl border border-slate-200 bg-slate-50 outline-none focus:bg-white transition-all focus:ring-2 focus:ring-amber-500/20"
+          className="w-full text-xs p-4 rounded-xl border border-slate-200 bg-slate-50 outline-none focus:bg-white transition-all focus:ring-2 focus:ring-amber-500/20 font-sans"
         />
 
         {!submitted && (

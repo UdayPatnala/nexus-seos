@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import type { Stage6ChallengeItem } from '../../types/homeworkTypes';
+import type { Stage6ChallengeItem, StageCompletionCallback } from '../../types/homeworkTypes';
 
 interface Props {
   challenges: Stage6ChallengeItem[];
-  onComplete: (score: number, answers: Record<string, any>) => void;
+  onComplete: StageCompletionCallback;
 }
 
 export default function Stage6ChallengeMode({ challenges, onComplete }: Props) {
@@ -39,7 +39,7 @@ export default function Stage6ChallengeMode({ challenges, onComplete }: Props) {
           </span>
           <h2 className="text-xl font-extrabold text-slate-900 mt-2">{challenge.title}</h2>
         </div>
-        <div className="bg-rose-950 text-rose-400 font-mono font-extrabold text-sm px-4 py-2 rounded-xl border border-rose-900 flex items-center gap-2">
+        <div className="bg-rose-950 text-rose-400 font-mono font-extrabold text-sm px-4 py-2 rounded-xl border border-rose-900 flex items-center gap-2 shadow-inner">
           ⏱️ {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
         </div>
       </div>

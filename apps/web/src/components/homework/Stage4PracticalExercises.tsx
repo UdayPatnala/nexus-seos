@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import type { Stage4PracticalExercise } from '../../types/homeworkTypes';
+import type { Stage4PracticalExercise, StageCompletionCallback } from '../../types/homeworkTypes';
 
 interface Props {
   exercises: Stage4PracticalExercise[];
-  onComplete: (score: number, answers: Record<string, any>) => void;
+  onComplete: StageCompletionCallback;
 }
 
 export default function Stage4PracticalExercises({ exercises, onComplete }: Props) {
@@ -38,9 +38,9 @@ export default function Stage4PracticalExercises({ exercises, onComplete }: Prop
           <p className="text-xs text-slate-600 leading-relaxed font-medium">{currentEx.instructions}</p>
 
           {currentEx.hint && (
-            <div className="bg-emerald-50 border border-emerald-200/60 p-3 rounded-lg text-xs text-emerald-900">
+            <div className="bg-emerald-50 border border-emerald-200/60 p-3.5 rounded-lg text-xs text-emerald-900">
               <span className="font-bold block">💡 Architectural Hint</span>
-              <p className="mt-0.5">{currentEx.hint}</p>
+              <p className="mt-0.5 font-medium">{currentEx.hint}</p>
             </div>
           )}
 
@@ -51,7 +51,7 @@ export default function Stage4PracticalExercises({ exercises, onComplete }: Prop
           )}
         </div>
 
-        <div className="bg-slate-900 rounded-xl p-4 flex flex-col justify-between space-y-4 shadow-lg">
+        <div className="bg-slate-900 rounded-xl p-4 flex flex-col justify-between space-y-4 shadow-lg border border-slate-800">
           <div className="flex items-center justify-between border-b border-slate-800 pb-3">
             <span className="text-xs font-mono font-bold text-slate-400">SolutionEditor.java</span>
             <button

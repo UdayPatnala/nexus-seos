@@ -9,5 +9,9 @@
   - Added Spring Boot JPA entities `Homework.java` & `HomeworkSubmission.java`.
   - Added `HomeworkRepository.java`, `HomeworkSubmissionRepository.java`, and `HomeworkService.java`.
   - Added `HomeworkEngine.tsx` master component and embedded it into `CoursesPage.tsx`.
-- **System Documentation**:
-  - Added `MASTER_PROJECT_MEMORY.md`, `ROADMAP.md`, `PROJECT_BIBLE.md`, `CHANGELOG.md`.
+
+### Refactored & Improved
+- **Code Audit & Type Hardening**:
+  - Hardened TypeScript interfaces for submission callbacks (`StageCompletionCallback`, `StageAnswerPayload`, `AIEvaluationReport`).
+  - Added smooth Framer Motion `AnimatePresence` page & tab transitions to `HomeworkEngine.tsx`.
+  - Polished error handling, loading states, and keyboard accessibility across all 7 stage components.

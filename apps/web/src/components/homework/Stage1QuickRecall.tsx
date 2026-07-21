@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import type { Stage1QuickRecallItem } from '../../types/homeworkTypes';
+import type { Stage1QuickRecallItem, StageCompletionCallback } from '../../types/homeworkTypes';
 
 interface Props {
   items: Stage1QuickRecallItem[];
-  onComplete: (score: number, answers: Record<string, any>) => void;
+  onComplete: StageCompletionCallback;
 }
 
 export default function Stage1QuickRecall({ items, onComplete }: Props) {
@@ -46,20 +46,20 @@ export default function Stage1QuickRecall({ items, onComplete }: Props) {
         {!revealed ? (
           <button
             onClick={() => setRevealed(true)}
-            className="mt-8 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm px-6 py-2.5 rounded-xl shadow-md"
+            className="mt-8 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm px-6 py-2.5 rounded-xl shadow-md transition-all"
           >
             🔍 Reveal Concept & Summary
           </button>
         ) : (
           <div className="mt-8 pt-6 border-t border-slate-100 space-y-4 text-left bg-slate-50 p-6 rounded-xl">
-            <p className="text-slate-700 text-sm font-medium">{currentItem.backConceptSummary}</p>
-            <div className="bg-amber-50 p-3 rounded-lg text-xs font-semibold text-amber-900">
+            <p className="text-slate-700 text-sm font-medium leading-relaxed">{currentItem.backConceptSummary}</p>
+            <div className="bg-amber-50 p-3 rounded-lg text-xs font-semibold text-amber-900 border border-amber-200/60">
               💡 Takeaway: {currentItem.keyTakeaway}
             </div>
             <div className="flex justify-center gap-3 pt-3">
-              <button onClick={() => handleRate('HARD')} className="bg-red-50 text-red-700 px-4 py-2 text-xs font-bold rounded-lg border border-red-200">🔴 Hard</button>
-              <button onClick={() => handleRate('MEDIUM')} className="bg-amber-50 text-amber-700 px-4 py-2 text-xs font-bold rounded-lg border border-amber-200">🟡 Medium</button>
-              <button onClick={() => handleRate('EASY')} className="bg-emerald-50 text-emerald-700 px-4 py-2 text-xs font-bold rounded-lg border border-emerald-200">🟢 Easy</button>
+              <button onClick={() => handleRate('HARD')} className="bg-red-50 hover:bg-red-100 text-red-700 px-4 py-2 text-xs font-bold rounded-lg border border-red-200 transition-colors">🔴 Hard</button>
+              <button onClick={() => handleRate('MEDIUM')} className="bg-amber-50 hover:bg-amber-100 text-amber-700 px-4 py-2 text-xs font-bold rounded-lg border border-amber-200 transition-colors">🟡 Medium</button>
+              <button onClick={() => handleRate('EASY')} className="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 px-4 py-2 text-xs font-bold rounded-lg border border-emerald-200 transition-colors">🟢 Easy</button>
             </div>
           </div>
         )}

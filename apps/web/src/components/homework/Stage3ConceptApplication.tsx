@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import type { Stage3ApplicationItem } from '../../types/homeworkTypes';
+import type { Stage3ApplicationItem, StageCompletionCallback } from '../../types/homeworkTypes';
 
 interface Props {
   items: Stage3ApplicationItem[];
-  onComplete: (score: number, answers: Record<string, any>) => void;
+  onComplete: StageCompletionCallback;
 }
 
 export default function Stage3ConceptApplication({ items, onComplete }: Props) {
@@ -54,7 +54,7 @@ export default function Stage3ConceptApplication({ items, onComplete }: Props) {
             <p className="text-slate-800 font-semibold text-sm">{item.prompt}</p>
 
             {item.snippet && (
-              <pre className="bg-slate-900 text-slate-100 text-xs p-4 rounded-xl font-mono overflow-x-auto">
+              <pre className="bg-slate-900 text-slate-100 text-xs p-4 rounded-xl font-mono overflow-x-auto border border-slate-800">
                 <code>{item.snippet}</code>
               </pre>
             )}
@@ -65,7 +65,7 @@ export default function Stage3ConceptApplication({ items, onComplete }: Props) {
               value={answers[item.id] || ''}
               onChange={e => handleTextChange(item.id, e.target.value)}
               placeholder="Explain your reasoning or write predicted output..."
-              className="w-full text-xs p-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white transition-all outline-none focus:ring-2 focus:ring-blue-500/20"
+              className="w-full text-xs p-3.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white transition-all outline-none focus:ring-2 focus:ring-blue-500/20 font-sans"
             />
 
             {submitted && (

@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import type { Stage2VerificationQuestion } from '../../types/homeworkTypes';
+import type { Stage2VerificationQuestion, StageCompletionCallback } from '../../types/homeworkTypes';
 
 interface Props {
   questions: Stage2VerificationQuestion[];
-  onComplete: (score: number, answers: Record<string, any>) => void;
+  onComplete: StageCompletionCallback;
 }
 
 export default function Stage2ConceptVerification({ questions, onComplete }: Props) {

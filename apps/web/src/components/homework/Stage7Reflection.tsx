@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import type { Stage7ReflectionItem } from '../../types/homeworkTypes';
+import type { Stage7ReflectionItem, StageCompletionCallback } from '../../types/homeworkTypes';
 
 interface Props {
   items: Stage7ReflectionItem[];
-  onComplete: (score: number, answers: Record<string, any>) => void;
+  onComplete: StageCompletionCallback;
 }
 
 export default function Stage7Reflection({ items, onComplete }: Props) {

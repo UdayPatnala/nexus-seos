@@ -84,3 +84,19 @@ export interface HomeworkAssignment {
   stage6Challenge: Stage6ChallengeItem[];
   stage7Reflection: Stage7ReflectionItem[];
 }
+
+export type StageAnswerPayload = Record<string, string | number | boolean | Record<string, any>>;
+
+export interface StageCompletionCallback {
+  (score: number, answers: StageAnswerPayload): void;
+}
+
+export interface AIEvaluationReport {
+  score: number;
+  correctness: number;
+  codeQuality: number;
+  performance: number;
+  maintainability: number;
+  detailedFeedback: string;
+  improvementTips: string[];
+}
